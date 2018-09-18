@@ -16,16 +16,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btn1.setOnClickListener { click (it)}
-        btn2.setOnClickListener { click (it)}
-        btn3.setOnClickListener { click (it)}
-        btn4.setOnClickListener { click (it)}
-        btn5.setOnClickListener { click (it)}
-        btn6.setOnClickListener { click (it)}
-        btn7.setOnClickListener { click (it)}
-        btn8.setOnClickListener { click (it)}
-        btn9.setOnClickListener { click (it)}
+        btn1.setOnClickListener { click(it) }
+        btn2.setOnClickListener { click(it) }
+        btn3.setOnClickListener { click(it) }
+        btn4.setOnClickListener { click(it) }
+        btn5.setOnClickListener { click(it) }
+        btn6.setOnClickListener { click(it) }
+        btn7.setOnClickListener { click(it) }
+        btn8.setOnClickListener { click(it) }
+        btn9.setOnClickListener { click(it) }
 
+        Btn_reiniciar.setOnClickListener { resetGame() }
+
+        valiDateWinner(numUser)
     }
 
     protected fun fillmatrix(idButton: Int, NumUsuario: Int) {
@@ -33,56 +36,125 @@ class MainActivity : AppCompatActivity() {
         if (idButton == btn1.id) {
             matrixPlayer[0][0] = NumUsuario
         }
+        if (idButton == btn2.id) {
+            matrixPlayer[0][1] = NumUsuario
+        }
+
+        if (idButton == btn3.id) {
+            matrixPlayer[0][2] = NumUsuario
+        }
+
+        if (idButton == btn4.id) {
+            matrixPlayer[1][0] = NumUsuario
+        }
+
+        if (idButton == btn5.id) {
+            matrixPlayer[1][1] = NumUsuario
+        }
+
+        if (idButton == btn6.id) {
+            matrixPlayer[1][2] = NumUsuario
+        }
+
+        if (idButton == btn7.id) {
+            matrixPlayer[2][0] = NumUsuario
+        }
+
+        if (idButton == btn8.id) {
+            matrixPlayer[2][1] = NumUsuario
+        }
+
+        if (idButton == btn9.id) {
+            matrixPlayer[2][2] = NumUsuario
+        }
     }
 
-    private fun validateRow() {
-        var cont = 0
 
-    }
+    private fun validateRows(numUser: Int): Boolean {
+        var win = false
 
-    private fun validateRows() {
-
-        var cont = 0
-
-        for (colArray in matrixPlayer) {
-            for (rowValue in colArray) {
-                if (rowValue == 1) {
-                    cont++
+        for (row in 0 until matrixPlayer.size) {
+            for (col in 0 until matrixPlayer.size) {
+                if (matrixPlayer[row][col] != this.numUser) {
+                    win = false
+                    break
+                } else {
+                    win = true
                 }
+            }
+            if (win) {
+                break
             }
         }
 
-        if (cont == 3) {
-            // gano el jugador 1
+        return win
+
+    }
+
+    private fun validateColumns(numUser: Int): Boolean {
+        var win = false
+
+        for (col in 0 until matrixPlayer.size) {
+            for (row in 0 until matrixPlayer.size) {
+                if (matrixPlayer[row][col] != this.numUser) {
+                    win = false
+                    break
+                } else {
+                    win = true
+                }
+            }
+            if (win) {
+                break
+            }
+        }
+
+        return win
+
+    }
+
+    private fun valiDateWinner(numUser: Int) {
+
+        var win : Boolean = validateRows(numUser)
+
+        if (win){
+            lblGanador.text= winMsg(numUser)
             return
         }
 
-        for (colArray in matrixPlayer) {
-            for (rowValue in colArray) {
-                if (rowValue == 2) {
-                    cont++
-                }
-            }
+        win  = validateColumns(numUser)
+
+        if (win){
+            lblGanador.text= winMsg(numUser)
+            return
         }
-
-        if (cont == 3) {
-            // gano el jugador 2
-        }
-
-
     }
 
-    fun Button.enable(){
-        this.isEnabled=true
+    private val winMsg:(Int)-> String = {
+        "El ganador es el jugador $it"
     }
-    fun Button.disable(){
-        this.isEnabled=true
+
+
+    fun Button.enable() {
+        this.isEnabled = true
     }
-    fun Button.clear(){
-        this.text=""
+
+    fun Button.disable() {
+        this.isEnabled = false
+    }
+
+    fun Button.clear() {
+        this.text = ""
     }
 
     private fun resetGame() {
+        for (row in 0 until matrixPlayer.size) {
+            for (col in 0 until matrixPlayer.size) {
+                matrixPlayer[row][col] = 0
+
+            }
+
+        }
+
         btn1.enable()
         btn2.enable()
         btn3.enable()
@@ -92,6 +164,19 @@ class MainActivity : AppCompatActivity() {
         btn7.enable()
         btn8.enable()
         btn9.enable()
+
+        btn1.clear()
+        btn2.clear()
+        btn3.clear()
+        btn4.clear()
+        btn5.clear()
+        btn6.clear()
+        btn7.clear()
+        btn8.clear()
+        btn9.clear()
+
+        numUser = 1
+        lblGanador.text=""
 
     }
 
@@ -112,17 +197,9 @@ class MainActivity : AppCompatActivity() {
                 button.setTextColor(getColor(R.color.colorAccent))
             }
         }
-        button.isEnabled
+        button.disable()
 
     }
 
-    inner class ClicButton : View.OnClickListener {
 
-        override fun onClick(v: View?) {
-
-
-        }
-
-
-    }
 }
