@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         Btn_reiniciar.setOnClickListener { resetGame() }
 
-        valiDateWinner(numUser)
     }
 
     protected fun fillmatrix(idButton: Int, NumUsuario: Int) {
@@ -112,7 +111,45 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun valiDateWinner(numUser: Int) {
+    private fun validateDiagonals(numUser: Int): Boolean {
+
+        var win = false
+
+        for (row in 0 until matrixPlayer.size) {
+            for (col in 0 until matrixPlayer.size) {
+                if (row == col) {
+                    win = matrixPlayer[row][col] == numUser
+                    break
+                }
+            }
+
+            if (!win) {
+                break
+            }
+        }
+
+        return win
+
+    }
+
+    private fun validateDiagonalsInverse(numUser: Int): Boolean {
+
+        var win = false
+        var col = 2
+
+        for (row in 0 until matrixPlayer.size) {
+            win = matrixPlayer[row][col] == numUser
+            if (!win) {
+                break
+            }
+            col--
+        }
+
+        return win
+
+    }
+
+    private fun validateWinner(numUser: Int) {
 
         var win : Boolean = validateRows(numUser)
 
@@ -126,6 +163,18 @@ class MainActivity : AppCompatActivity() {
         if (win){
             lblGanador.text= winMsg(numUser)
             return
+        }
+
+        win = validateDiagonals(numUser)
+
+        if (win) {
+            lblGanador.text = winMsg(numUser)
+        }
+
+        win = validateDiagonalsInverse(numUser)
+
+        if (win) {
+            lblGanador.text = winMsg(numUser)
         }
     }
 
@@ -183,6 +232,9 @@ class MainActivity : AppCompatActivity() {
     private val click: (View) -> Unit = {
 
         val button = it as Button
+
+        fillmatrix(button.id, numUser)
+        validateWinner(numUser)
 
         if (numUser == 1) {
             button.text = "O"
